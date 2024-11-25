@@ -1,0 +1,1 @@
+wget https://github.com/zju3dv/EasyMocap/blob/98a229f2ab7647f14ac9693eab00639337274b49/data/smplx/J_regressor_body25.npy -P body_models/misc/
