@@ -23,7 +23,7 @@ Too many manual operations to be written here
 ### Train
 
 - Take care of the available GPUs, run `nvidia-smi` beforehand to watch GPU utilization.
-- Valid choice of `dataset.test_mode`: view, video, all
+- Valid choices of `dataset.test_mode`: view, video, all
 
 ```bash
 conda activate 3dgs-avatar
@@ -37,6 +37,12 @@ Take care of the available GPUs, run `nvidia-smi` beforehand to watch GPU utiliz
 
 ```bash
 CUDA_VISIBLE_DEVICES=1 python render.py mode=test dataset.test_mode=pose pose_correction=none dataset=zjumocap_377_mono
+```
+
+### Predict
+
+```bash
+CUDA_VISIBLE_DEVICES=1 python render.py mode=predict dataset.predict_seq=0 dataset=zjumocap_377_mono
 ```
 
 ## Visualize

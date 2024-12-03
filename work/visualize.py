@@ -18,9 +18,9 @@ def create_video_from_pngs(input_folder, output_video_path, fps=30):
     imageio.mimsave(output_video_path, images, fps=fps)
 
 # Set the output video path and the frames per second (fps)
-input_folder = '/users/xch/multimodal/3dgs-avatar/exp/zju_377_mono-direct-mlp_field-ingp-shallow_mlp-default/test-video/renders'
+input_folder = '/users/xch/multimodal/3dgs-avatar/exp/zju_377_mono-direct-mlp_field-ingp-shallow_mlp-default/predict-dance0/renders'
 output_video_path = 'output.mp4'
-fps = 5  # Adjust the frame rate as needed
+fps = 30  # Adjust the frame rate as needed
 
 # Call the function to create the video
 create_video_from_pngs(input_folder,output_video_path, fps)
