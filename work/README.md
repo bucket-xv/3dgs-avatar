@@ -1,14 +1,29 @@
-# Preparation for experiments
+# Guide
+
+## Structure
+
+- `exp/` stores all the experiment results
+- `work/` stores all the scripts and documents that we have added
+- `tmp/` stores the raw downloaded dataset for backup in case the processed data are polluted
+
+The rest are within the original 3DGS-Avatar project, only important ones are listed here:
+- `configs/` stores all the configuration files
+- `dataset/` stores all the dataset scripts
+- `models/` stores all the model scripts
 
 ## Environment
 
-run `env.sh`
+<!-- run `env.sh` -->
+
+TO BE DONE
 
 ## Model
 
 Too many manual operations to be written here.
 
 ## Dataset
+
+Currently, all zju_mocap datasets and its relevant data have been downloaded at `~/data`. People snapshot haven't been processed due to lack of processing scripts.
 
 ### Overall illustration & ZJUMoCap
 
@@ -51,12 +66,12 @@ CUDA_VISIBLE_DEVICES=1 python render.py mode=predict dataset.predict_seq=0 datas
 
 ## Visualize
 
-`video.py` is a simple script to convert images to video. To use it, first switch to `tool` environment.
+`video.py` is a simple script to convert images to video. To use it, first switch to `tool` environment. Then give the right arguments(See them using `python video.py -h`).
 
 ```bash
 conda activate tool
 python video.py -h
 
 # Example command:
-# python video.py -i /users/xch/multimodal/3dgs-avatar/exp/zju_377_mono-direct-mlp_field-ingp-shallow_mlp-default/predict-dance0/renders -o output.mp4 -d png -f 30
+# python video.py -i /users/xch/multimodal/3dgs-avatar/exp/zju_377_mono-direct-mlp_field-ingp-shallow_mlp-default/predict-dance0/renders -o videos/output.mp4 -d png -f 30
 ```
