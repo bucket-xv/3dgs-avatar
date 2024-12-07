@@ -4,7 +4,7 @@ import os
 env = os.environ.copy()
 env['CUDA_VISIBLE_DEVICES'] = '1'
 
-for dataset_id in [386, 387, 392, 393, 394, 390]:
+for dataset_id in [386, 387, 392, 393, 394, 377]:
     dataset = f'zjumocap_{dataset_id}_mono'
     for mode in ['train', 'test', 'predict']:
         cmd = ['python']
