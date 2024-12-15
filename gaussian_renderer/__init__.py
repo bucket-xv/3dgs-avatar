@@ -29,6 +29,11 @@ def render(data,
     """
     pc, loss_reg, colors_precomp = scene.convert_gaussians(data, iteration, compute_loss)
 
+    # for attr, value in vars(pc).items():
+    #     print(f"{attr}: {value}")
+    # # Pause
+    # pause = input("Press enter to continue")
+
     # Create zero tensor. We will use it to make pytorch return gradients of the 2D (screen-space) means
     screenspace_points = torch.zeros_like(pc.get_xyz, dtype=pc.get_xyz.dtype, requires_grad=True, device="cuda") + 0
     try:
