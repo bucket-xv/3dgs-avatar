@@ -1,6 +1,7 @@
 import os
 import imageio
 import argparse
+import sys
 
 # Function to create a video from .png files in the current directory
 def create_video_from_pngs(input_folder, output_video_path, fps=30, format='png'):

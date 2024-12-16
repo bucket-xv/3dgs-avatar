@@ -54,7 +54,7 @@ Take care of the available GPUs, run `nvidia-smi` beforehand to watch GPU utiliz
 - Valid choices of `dataset.test_mode`: view, video, all
 
 ```bash
-CUDA_VISIBLE_DEVICES=1 python render.py mode=test dataset.test_mode=view dataset=zjumocap_377_mono
+CUDA_VISIBLE_DEVICES=1 python render.py mode=test dataset.test_mode=video dataset=zjumocap_377_mono
 ```
 
 ### Predict
@@ -74,5 +74,5 @@ conda activate tool
 python video.py -h
 
 # Example command:
-# python video.py -i /users/xch/multimodal/3dgs-avatar/exp/zju_377_mono-direct-mlp_field-ingp-shallow_mlp-default/predict-dance0/renders -o videos/output.mp4 -d png -f 30
+# python work/video.py -i /users/xch/multimodal/3dgs-avatar/exp/zju_377_mono-direct-mlp_field-ingp-shallow_mlp-default/predict-dance0/renders -o videos/output.mp4 -d png -f 30
 ```

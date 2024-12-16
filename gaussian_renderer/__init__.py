@@ -29,11 +29,6 @@ def render(data,
     """
     pc, loss_reg, colors_precomp = scene.convert_gaussians(data, iteration, compute_loss)
 
-    # for attr, value in vars(pc).items():
-    #     print(f"{attr}: {value}")
-    # # Pause
-    # pause = input("Press enter to continue")
-
     # Create zero tensor. We will use it to make pytorch return gradients of the 2D (screen-space) means
     screenspace_points = torch.zeros_like(pc.get_xyz, dtype=pc.get_xyz.dtype, requires_grad=True, device="cuda") + 0
     try:
@@ -76,6 +71,11 @@ def render(data,
     else:
         scales = pc.get_scaling
         rotations = pc.get_rotation
+
+    opacity = 0.5 * opacity + 0.5
+    cov3D_precomp = 1e-6 * torch.ones_like(cov3D_precomp)
+    scales = torch.ones_like(scales) if scales is not None else scales
+    colors_precomp = 0.5 * colors_precomp + 0.5
 
     # If precomputed colors are provided, use them. Otherwise, if it is desired to precompute colors
     # from SHs in Python, do it. If not, then SH -> RGB conversion will be done by rasterizer.
