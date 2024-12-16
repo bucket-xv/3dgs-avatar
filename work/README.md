@@ -74,5 +74,5 @@ conda activate tool
 python video.py -h
 
 # Example command:
-# python video.py -i /users/xch/multimodal/3dgs-avatar/exp/zju_377_mono-direct-mlp_field-ingp-shallow_mlp-default/predict-dance0/renders -o videos/output.mp4 -d png -f 30
+# python work/video.py -i /users/xch/multimodal/3dgs-avatar/exp/zju_377_mono-direct-mlp_field-ingp-shallow_mlp-default/predict-dance0/renders -o videos/output.mp4 -d png -f 30
 ```
