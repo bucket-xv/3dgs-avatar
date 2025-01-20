@@ -6,7 +6,7 @@ This repository is about reproducing and improving [3DGS-Avatar: Animatable Avat
 
 1. Clone the repo
 ```shell
-git clone git@github.com:bucket-xv/3dgs-avatar.git
+git clone --recursive git@github.com:bucket-xv/3dgs-avatar.git
 ```
 
 2. Install the environment. Follow the instructions in https://github.com/mikeqzy/3dgs-avatar-release to set up the virtual environment `3dgs-avatar`.
