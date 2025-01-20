@@ -4,12 +4,16 @@ This repository is about reproducing and improving [3DGS-Avatar: Animatable Avat
 
 ## Installation and Requirements 
 
-First, 
+1. Clone the repo
 ```shell
 git clone git@github.com:bucket-xv/3dgs-avatar.git
 ```
 
-Then, follow the instructions in https://github.com/mikeqzy/3dgs-avatar-release to set up the environment. Assume your working directory is the project directory. You should finally have `3dgs-avatar` Anaconda environment, `body_models` data (put to `./body_models`), ZJU-Mocap dataset (put to `../../data`).
+2. Install the environment. Follow the instructions in https://github.com/mikeqzy/3dgs-avatar-release to set up the virtual environment `3dgs-avatar`.
+
+3. Prepare the SMPL model. You can still get them following the instructions in https://github.com/mikeqzy/3dgs-avatar-release. Assume you are TA, you can direcly visit PKU netdisk(https://disk.pku.edu.cn/link/AAC3920ABDCC284795844765B760EDB240) for simplicity. Put `body_model` under current directory.
+
+4. Preprocess ZJU-Mocap dataset.You can still get them following the instructions in https://github.com/mikeqzy/3dgs-avatar-release.  Put `data` under `../..`. 
 
 ## Usage
 
