@@ -13,13 +13,18 @@ Then, follow the instructions in https://github.com/mikeqzy/3dgs-avatar-release 
 
 ## Usage
 
-### Baseline 
+Change `CUDA_VISIBLE_DEVICES=<id>` according to your server. The same as below. 
+
+### Initialize better Gaussians
 This is under the basic configuration.
 ```shell 
 CUDA_VISIBLE_DEVICES=0 python train.py dataset=zjumocap_393_mono --config-name=config 
 ```
 
-Change `CUDA_VISIBLE_DEVICES=<id>` according to your server. The same as below. 
+### SMPL Nearest neighbour as rigid transformation module
+```shell
+CUDA_VISIBLE_DEVICES=0 python train.py dataset=zjumocap_393_mono rigid=smpl_nn --config-name=config 
+```
 
 ### Fixed Gaussian Opacity and Rotation 
 
@@ -54,6 +59,8 @@ CUDA_VISIBLE_DEVICES=0 python train.py dataset=zjumocap_393_mono --config-name=c
 
 
 **Below is the original README in their repository.**
+
+
 
 # 3DGS-Avatar: Animatable Avatars via Deformable 3D Gaussian Splatting
 ## [Paper](https://arxiv.org/abs/2312.09228) | [Project Page](https://neuralbodies.github.io/3DGS-Avatar/index.html)
