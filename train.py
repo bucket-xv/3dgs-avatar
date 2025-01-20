@@ -15,7 +15,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 from random import randint
-from utils.loss_utils import l1_loss, ssim
+from utils.loss_utils import l1_loss, ssim, huber_loss, weighted_l1_loss
 from gaussian_renderer import render
 from scene import Scene, GaussianModel
 from utils.general_utils import fix_random, Evaluator, PSEvaluator
@@ -109,7 +109,6 @@ def training(config):
         image, viewspace_point_tensor, visibility_filter, radii = render_pkg["render"], render_pkg["viewspace_points"], render_pkg["visibility_filter"], render_pkg["radii"]
         opacity = render_pkg["opacity_render"] if use_mask else None
 
-        # Loss
         gt_image = data.original_image.cuda()
 
         lambda_l1 = C(iteration, config.opt.lambda_l1)
@@ -117,7 +116,15 @@ def training(config):
         loss_l1 = torch.tensor(0.).cuda()
         loss_dssim = torch.tensor(0.).cuda()
         if lambda_l1 > 0.:
-            loss_l1 = l1_loss(image, gt_image)
+            if 'l1_loss_func' not in config.opt:
+                loss_l1 = l1_loss(image, gt_image)
+            elif config.opt.l1_loss_func == 'huber':
+                loss_l1 = huber_loss(image, gt_image, 0.1)
+            elif config.opt.l1_loss_func == 'weighted_l1':
+                loss_l1 = weighted_l1_loss(image, gt_image, alpha=2)
+            else : 
+                loss_l1 = l1_loss(image, gt_image)
+
         if lambda_dssim > 0.:
             loss_dssim = 1.0 - ssim(image, gt_image)
         loss = lambda_l1 * loss_l1 + lambda_dssim * loss_dssim
@@ -207,7 +214,7 @@ def training(config):
                 progress_bar.close()
 
             # Log and save
-            validation(iteration, testing_iterations, testing_interval, scene, evaluator,(pipe, background))
+            validation(iteration, testing_iterations, testing_interval, scene, evaluator,(pipe, background)) 
             if (iteration in saving_iterations):
                 print("\n[ITER {}] Saving Gaussians".format(iteration))
                 scene.save(iteration)
