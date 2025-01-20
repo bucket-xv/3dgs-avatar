@@ -13,7 +13,7 @@ git clone git@github.com:bucket-xv/3dgs-avatar.git
 
 3. Prepare the SMPL model. You can still get them following the instructions in https://github.com/mikeqzy/3dgs-avatar-release. Assume you are TA, you can direcly visit PKU netdisk(https://disk.pku.edu.cn/link/AAC3920ABDCC284795844765B760EDB240) for simplicity. Put `body_model` under current directory.
 
-4. Preprocess ZJU-Mocap dataset.You can still get them following the instructions in https://github.com/mikeqzy/3dgs-avatar-release.  Put `data` under `../..`. 
+4. Preprocess ZJU-Mocap dataset. You can get them following the instructions in https://github.com/mikeqzy/3dgs-avatar-release. The processed data (24G) is too large to be pulled from remote and put to PKU Netdisk. We may try to upload it to PKU netdisk, but if not, please consult the above link. Put `data` under `../..`. 
 
 ## Usage
 
