@@ -176,6 +176,59 @@ class GaussianModel:
     def create_from_pcd(self, pcd : BasicPointCloud, spatial_lr_scale=1.):
         self.spatial_lr_scale = spatial_lr_scale
         fused_point_cloud = torch.tensor(np.asarray(pcd.points)).float().cuda()
+
+        # Step 1: Find the indices of the 3 nearest points for each point
+        from pytorch3d.ops.knn import knn_points
+        _, nn_ix, _ = knn_points(fused_point_cloud.unsqueeze(0),
+                            fused_point_cloud.unsqueeze(0),
+                            K=3,
+                            return_sorted=True)
+        nearest_points_indices = nn_ix.squeeze(0)
+
+        # Step 2: Construct a plane for each point using the 3 nearest points
+        def compute_plane_from_points(p1, p2, p3):
+            # Vectors from p1 to p2 and p1 to p3
+            v1 = p2 - p1
+            v2 = p3 - p1
+            # Normal vector to the plane (cross product of v1 and v2)
+            normal_vector = torch.cross(v1, v2)
+            normal_vector = normal_vector / torch.norm(normal_vector)
+            # A point on the plane (p1)
+            point_on_plane = p1
+            # Plane equation parameters (normal_vector, point_on_plane)
+            return normal_vector, point_on_plane
+
+        # Preallocate a list to store rotation matrices
+        rotation_matrices = []
+
+        # Iterate over each point in the point_cloud
+        for i in range(fused_point_cloud.shape[0]):
+            # Get the 3 nearest points
+            nearest_points = fused_point_cloud[nearest_points_indices[i]]
+            # Compute the plane for the current point
+            normal_vector, point_on_plane = compute_plane_from_points(
+                nearest_points[0], nearest_points[1], nearest_points[2]
+            )
+            # Construct the rotation matrix
+            z_axis = normal_vector / torch.norm(normal_vector)  # Normalize the normal vector
+            # Choose an arbitrary vector not parallel to the normal vector as the x-axis
+            x_axis = torch.tensor([1., 0., 0.]).cuda() if not torch.allclose(z_axis, torch.tensor([1., 0., 0.]).cuda()) else torch.tensor([0., 1., 0.]).cuda()
+            x_axis = x_axis - torch.dot(x_axis, z_axis) * z_axis
+            x_axis = x_axis / torch.norm(x_axis)
+            # Calculate the y-axis using the cross product
+            y_axis = torch.cross(z_axis, x_axis)
+            # Construct the rotation matrix
+            R = torch.stack((x_axis, y_axis, z_axis), dim=1)
+
+            # Append the rotation matrix to the list
+            rotation_matrices.append(R)
+
+        # Convert the list of rotation matrices to a tensor
+        rotation_matrices = torch.stack(rotation_matrices)
+        # Convert to quaterion
+        from utils.general_utils import rotation_matrix_to_quaternion
+        rotation_matrices = rotation_matrix_to_quaternion(rotation_matrices)
+
         fused_color = RGB2SH(torch.tensor(np.asarray(pcd.colors)).float().cuda())
 
         if self.use_sh:
@@ -189,8 +242,11 @@ class GaussianModel:
 
         dist2 = torch.clamp_min(distCUDA2(torch.from_numpy(np.asarray(pcd.points)).float().cuda()), 0.0000001)
         scales = torch.log(torch.sqrt(dist2))[...,None].repeat(1, 3)
-        rots = torch.zeros((fused_point_cloud.shape[0], 4), device="cuda")
-        rots[:, 0] = 1
+        # scales = scales/2
+        scales[:,2] = scales[:,2]*2
+        rots = rotation_matrices.cuda()
+        # rots = torch.zeros((fused_point_cloud.shape[0], 4), device="cuda")
+        # rots[:, 0] = 1
 
         opacities = inverse_sigmoid(0.1 * torch.ones((fused_point_cloud.shape[0], 1), dtype=torch.float, device="cuda"))
 
