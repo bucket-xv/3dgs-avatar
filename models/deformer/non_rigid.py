@@ -264,6 +264,13 @@ class HashGridwithMLP(NonRigidDeform):
             q1 = delta_rot
             q1[:, 0] = 1.  # [1,0,0,0] represents identity rotation
             delta_rot = delta_rot[:, 1:]
+            
+            # *
+            if self.cfg.get('fix_rotation', False) == True:
+                q1[:, 1] = 0.
+                q1[:, 2] = 0.
+                q1[:, 3] = 0.
+        
             q2 = gaussians._rotation
             # deformed_gaussians._rotation = quaternion_multiply(q1, q2)
             deformed_gaussians._rotation = tf.quaternion_multiply(q1, q2)

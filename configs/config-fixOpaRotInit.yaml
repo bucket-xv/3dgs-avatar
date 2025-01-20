@@ -1,4 +1,4 @@
-defaults: # ! 最高优先级 
+defaults:
   - _self_
   - dataset: zjumocap_377_mono
   - pose_correction: direct
@@ -6,7 +6,7 @@ defaults: # ! 最高优先级
   - rigid: skinning_field
   - non_rigid: hashgrid
   - option:
-      - iter14k
+      - iter15k
 
 hydra:
   run:
@@ -14,14 +14,16 @@ hydra:
   job:
     chdir: false
 
-name: ${dataset_name}-${pose_name}-${rigid_name}-${non_rigid_name}-${texture_name}-${tag}
-tag: default
+name: ${dataset_name}-${pose_name}-${rigid_name}-${non_rigid_name}-${texture_name}-${tag} # exp 命名
+tag: fixOpacityRotation-onlyInit
 
 model:
   gaussian:
     use_sh: true
     sh_degree: 3
     delay: 1000
+    fix_opacity: true 
+    fix_rotation: true 
   pose_correction:
     name: direct
   deformer:
@@ -46,6 +48,8 @@ dataset:
   eval: false
 
 opt:
+  l1_loss_func: l1 # *
+
   iterations: 60000
   grad_clip: 0.1
 
@@ -77,7 +81,7 @@ opt:
   lambda_aiap_xyz: 1.
   lambda_aiap_cov: 100.
 
-  # densification configs # ! in guassian_model.py
+  # densification configs
   percent_dense: 0.01
   densification_interval: 100
   opacity_reset_interval: 3000

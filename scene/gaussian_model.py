@@ -46,6 +46,21 @@ class GaussianModel:
     def __init__(self, cfg):
         self.cfg = cfg
 
+        # * fix opacity / rotation check
+        if 'fix_opacity' in cfg: 
+            if cfg.fix_opacity:
+                self.fix_opacity = True 
+            else : self.fix_opacity = False
+        else : self.fix_opacity = False
+
+        if 'fix_rotation' in cfg:
+            if cfg.fix_rotation:
+                self.fix_rotation = True
+            else : self.fix_rotation = False
+        else : self.fix_rotation = False 
+
+        #print(f'fix opacity: {self.fix_opacity}, fix rotation: {self.fix_rotation}')
+
         # two modes: SH coefficient or feature
         self.use_sh = cfg.use_sh
         self.active_sh_degree = 0
@@ -248,14 +263,26 @@ class GaussianModel:
         # rots = torch.zeros((fused_point_cloud.shape[0], 4), device="cuda")
         # rots[:, 0] = 1
 
-        opacities = inverse_sigmoid(0.1 * torch.ones((fused_point_cloud.shape[0], 1), dtype=torch.float, device="cuda"))
+        if not self.fix_opacity: 
+            opacities = inverse_sigmoid(0.1 * torch.ones((fused_point_cloud.shape[0], 1), dtype=torch.float, device="cuda"))
+        else :
+            opacities = torch.ones((fused_point_cloud.shape[0], 1), dtype=torch.float, device="cuda")
 
         self._xyz = nn.Parameter(fused_point_cloud.requires_grad_(True))
         self._features_dc = nn.Parameter(features[:,:,0:1].transpose(1, 2).contiguous().requires_grad_(True))
         self._features_rest = nn.Parameter(features[:,:,1:].transpose(1, 2).contiguous().requires_grad_(True))
         self._scaling = nn.Parameter(scales.requires_grad_(True))
-        self._rotation = nn.Parameter(rots.requires_grad_(True))
-        self._opacity = nn.Parameter(opacities.requires_grad_(True))
+
+        if not self.fix_rotation:
+            self._rotation = nn.Parameter(rots.requires_grad_(True))
+        else :
+            self._rotation = nn.Parameter(rots, requires_grad=False)
+        
+        if not self.fix_opacity: 
+            self._opacity = nn.Parameter(opacities.requires_grad_(True))
+        else :
+            self._opacity = nn.Parameter(opacities, requires_grad=False)
+
         self.max_radii2D = torch.zeros((self.get_xyz.shape[0]), device="cuda")
 
     def training_setup(self, training_args):

@@ -34,6 +34,7 @@ def predict(config):
         load_ckpt = config.get('load_ckpt', None)
         if load_ckpt is None:
             load_ckpt = os.path.join(scene.save_dir, "ckpt" + str(config.opt.iterations) + ".pth")
+        print(f'ckpt_path: {load_ckpt}')
         scene.load_checkpoint(load_ckpt)
 
         bg_color = [1, 1, 1] if config.dataset.white_background else [0, 0, 0]
@@ -87,6 +88,8 @@ def test(config):
 
         render_path = os.path.join(config.exp_dir, config.suffix, 'renders')
         makedirs(render_path, exist_ok=True)
+
+        print(f"Test: Rendering to {render_path}")
 
         iter_start = torch.cuda.Event(enable_timing=True)
         iter_end = torch.cuda.Event(enable_timing=True)
@@ -146,7 +149,7 @@ def test(config):
                  time=_time)
 
 
-@hydra.main(version_base=None, config_path="configs", config_name="config")
+@hydra.main(version_base=None, config_path="configs", config_name="config-fixOpaRot")#config_name="config-fixOpaRot")
 def main(config):
     OmegaConf.set_struct(config, False)
     config.dataset.preload = False

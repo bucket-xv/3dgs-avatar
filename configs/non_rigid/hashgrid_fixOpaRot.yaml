@@ -35,7 +35,9 @@ model:
         multires: 0
 
         last_layer_init: false
-        
+      
+      fix_rotation: true # *
+
 opt:
 #  lambda_nr_xyz: 1e-2
   lambda_nr_xyz: 0.
