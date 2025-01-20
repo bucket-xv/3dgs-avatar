@@ -1,3 +1,60 @@
+# 复现和改进 *3DGS-Avatar: Animatable Avatars via Deformable 3D Gaussian Splatting* 
+
+This repository is about reproducing and improving [3DGS-Avatar: Animatable Avatars via Deformable 3D Gaussian Splatting](https://neuralbodies.github.io/3DGS-Avatar/index.html). Thanks for their amazing work!
+
+## Installation and Requirements 
+
+First, 
+```shell
+git clone git@github.com:bucket-xv/3dgs-avatar.git
+```
+
+Then, follow the instructions in https://github.com/mikeqzy/3dgs-avatar-release to set up the environment. Assume your working directory is the project directory. You should finally have `3dgs-avatar` Anaconda environment, `body_models` data (put to `./body_models`), ZJU-Mocap dataset (put to `../../data`).
+
+## Usage
+
+### Baseline 
+This is under the basic configuration.
+```shell 
+CUDA_VISIBLE_DEVICES=0 python train.py dataset=zjumocap_393_mono --config-name=config 
+```
+
+Change `CUDA_VISIBLE_DEVICES=<id>` according to your server. The same as below. 
+
+### Fixed Gaussian Opacity and Rotation 
+
+1. Only in the initialization
+```shell
+CUDA_VISIBLE_DEVICES=0 python train.py dataset=zjumocap_393_mono --config-name=config-fixOpaRotInit
+```
+
+2. Both in the initialization and non-rigid transform 
+```shell 
+CUDA_VISIBLE_DEVICES=0 python train.py dataset=zjumocap_393_mono --config-name=config-fixOpaRotCompletely
+```
+
+### Different Loss Functions for Pixel Loss 
+
+All the following 3 configurations fix Gaussian opacity and rotation in initialization and non-rigid transform.
+
+1. L1 loss 
+```shell 
+CUDA_VISIBLE_DEVICES=0 python train.py dataset=zjumocap_393_mono --config-name=config-fixOpaRot-l1
+```
+
+2. Huber loss 
+```shell
+CUDA_VISIBLE_DEVICES=0 python train.py dataset=zjumocap_393_mono --config-name=config-fixOpaRot-huber
+```
+
+3. Weighted L1 loss
+```shell 
+CUDA_VISIBLE_DEVICES=0 python train.py dataset=zjumocap_393_mono --config-name=config-fixOpaRot-weightedL1
+```
+
+
+**Below is the original README in their repository.**
+
 # 3DGS-Avatar: Animatable Avatars via Deformable 3D Gaussian Splatting
 ## [Paper](https://arxiv.org/abs/2312.09228) | [Project Page](https://neuralbodies.github.io/3DGS-Avatar/index.html)
 
